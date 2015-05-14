@@ -2,9 +2,11 @@ var optimist = require('optimist');
 
 function WebpackReloadPlugin(ip){
   var argv = optimist.string('reload').alias('reload','r').argv;
-  
+
   this.ip = ip;
+  this.port = 8080;
   if(typeof argv.reload === 'string' && argv.reload.length > 0) this.ip = argv.reload;
+  if(typeof argv.port === 'number') this.port = argv.port;
 }
 
 WebpackReloadPlugin.prototype.apply  = function(compiler){
@@ -12,7 +14,7 @@ WebpackReloadPlugin.prototype.apply  = function(compiler){
     if(!this.ip) return;
 
     var entry = compiler.options.entry;
-    var reload = "webpack-dev-server/client?http://"+this.ip+":8080/";
+    var reload = "webpack-dev-server/client?http://"+this.ip+":"+this.port+"/";
 
     // string
     if(typeof entry === "string"){
